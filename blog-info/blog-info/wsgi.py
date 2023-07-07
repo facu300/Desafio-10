@@ -1,5 +1,5 @@
 """
-WSGI config for autos_1 project.
+WSGI config for blog-info project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
