@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div align="center">
+    <h1>Registro de Usuarios</h1>
+    <div style="text-align: center;">
+        <form method="post" style="display: inline-block; text-align: center;">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            {{ form.errors }}
+            <input type="submit" value="Registrarse">
+        </form>
+    </div>
+</div>
+
+{% endblock %}
