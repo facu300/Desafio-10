@@ -5,10 +5,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from . import models
 from django.urls import reverse
 from django.views import generic
-from .forms import UsuariosForm, LoginForm, ArticuloForm
+from .forms import UsuariosForm, LoginForm, ArticuloForm, ComentarioForm
 from django.contrib.auth import login, logout, authenticate
-from .models import Articulo
+from .models import Articulo, Comentario, Usuarios
 # from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import user_passes_test
+# from django.contrib.auth.models import User
+from .forms import PermisosUsuarioForm
 
 def index_view(request):
     context = {
@@ -19,8 +22,13 @@ def index_view(request):
 def blog(request):
     # Obtener todos los posts
     posts = Articulo.objects.all()
+
+    # Obtener los últimos 6 artículos ordenados por fecha de creación
+    ultimos_post = Articulo.objects.filter(publicado=True).order_by('-creacion')[:6]
+
     context = {
-        'posts': posts
+        'posts': posts,
+        'ultimos_post': ultimos_post
     }
     return render(request, "blog/blog.html", context)
 
@@ -28,9 +36,30 @@ def blog(request):
 #     template_name = "blog/base.html"
 
 
-def post(request, post_id):                                # renderizar post
+# def post(request, post_id):                                # renderizar post
+#     post = get_object_or_404(Articulo, pk=post_id)
+#     return render(request, 'post.html', {'post': post})
+
+def post(request, post_id):
     post = get_object_or_404(Articulo, pk=post_id)
-    return render(request, 'post.html', {'post': post})
+
+    # Obtener los últimos 6 artículos ordenados por fecha de creación
+    ultimos_post = Articulo.objects.filter(publicado=True).exclude(id=post_id).order_by('-creacion')[:6]
+    
+    if request.method == 'POST':
+        comentario_texto = request.POST.get('comentario', '')
+        if comentario_texto.strip():  # Asegurarse de que el comentario no esté en blanco
+            comentario = Comentario(
+                id_articulo=post,
+                id_usuario=request.user,
+                contenido=comentario_texto,
+                
+            )
+            comentario.save()
+    
+    comentarios = Comentario.objects.filter(id_articulo=post_id)
+    
+    return render(request, 'post.html', {'post': post, 'comentarios': comentarios, 'ultimos_post': ultimos_post})
 
 
 def register_view(request):
@@ -94,3 +123,59 @@ def new_post_view(request):
         form = ArticuloForm()
 
     return render(request, 'new_post.html', {'form': form})
+
+
+def delete_comment(request, comentario_id):
+    if request.method == "POST":
+        comentario = get_object_or_404(Comentario, pk=comentario_id)
+        if comentario.id_usuario == request.user:
+            comentario.delete()
+    return redirect('blog:post', post_id=comentario.id_articulo.id)
+
+
+# ----------------------------------- Edición de Permisos -----------------------
+
+def is_admin(user):
+    return user.is_superuser
+
+
+@user_passes_test(is_admin, login_url='/')
+def edit_users_permissions(request):
+    if request.method == 'POST':
+        for user in Usuarios.objects.all():
+            is_staff = request.POST.get('is_staff_{}'.format(user.id)) == 'on'
+            es_colaborador = request.POST.get('es_colaborador_{}'.format(user.id)) == 'on'
+            user.is_staff = is_staff
+            user.es_colaborador = es_colaborador
+            user.save()
+
+    users = Usuarios.objects.all()
+    form = PermisosUsuarioForm()
+
+    return render(request, 'permissions.html', {'users': users, 'form': form})
+
+# ------------------------------------ Edición de posts
+
+def editar_post(request, post_id):
+    post = get_object_or_404(Articulo, pk=post_id)
+
+    if request.method == 'POST':
+        form = ArticuloForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('blog:post', post_id=post.id)
+    else:
+        form = ArticuloForm(instance=post)
+
+    return render(request, 'editar_post.html', {'form': form})
+
+
+
+def eliminar_post(request, post_id, confirmacion=False):
+    post = get_object_or_404(Articulo, pk=post_id)
+
+    if confirmacion:
+        post.delete()
+        return redirect('blog:blog')
+
+    return render(request, 'eliminar_post.html', {'post': post})

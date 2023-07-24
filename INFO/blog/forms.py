@@ -55,7 +55,7 @@ class PermisosUsuarioForm(forms.ModelForm):
 class ComentarioForm(forms.ModelForm):
     class Meta:
         model = Comentario
-        fields = ['id_articulo', 'id_usuario', 'contenido', 'fecha_hora', 'estado']
+        fields = ['contenido']
 
 class CategoriaArticuloForm(forms.ModelForm):
     class Meta:

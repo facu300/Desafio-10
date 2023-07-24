@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Eliminar Post</title>
+</head>
+<body>
+    <h1>Eliminar Post</h1>
+    <p>¿Estás seguro de que deseas eliminar este post?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+        <a href="{% url 'blog:blog' %}" class="btn btn-sm btn-secondary">Cancelar</a>
+    </form>
+</body>
+</html>

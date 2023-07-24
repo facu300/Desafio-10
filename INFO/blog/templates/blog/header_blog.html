@@ -18,8 +18,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto py-0">
-                <a href="{% url 'blog:index' %}" class="nav-item nav-link">Inicio</a>
-                <a href="about.html" class="nav-item nav-link">Acerca de</a>
+                <a href="{% url 'blog:index' %}" class="nav-item nav-link">Home</a>
+                {% comment %} <a href="about.html" class="nav-item nav-link">Acerca de</a> {% endcomment %}
                 <a href="{% url 'blog:blog' %}" class="nav-item nav-link active">Blog</a>
                 {% comment %} <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Blog</a>
@@ -29,16 +29,24 @@
                     </div>
                 </div> {% endcomment %}
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Más</a>
                     <div class="dropdown-menu m-0">
-                        <a href="price.html" class="dropdown-item">Pricing Plan</a>
-                        <a href="feature.html" class="dropdown-item">Our features</a>
-                        <a href="team.html" class="dropdown-item">Team Members</a>
-                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                        <a href="quote.html" class="dropdown-item">Free Quote</a>
+                        {% if user.is_authenticated %}
+                        <a href="#" class="dropdown-item">Perfil</a>
+                        {% endif %}
+                        <a href="#" class="dropdown-item">Acerca de</a>
+                        <a href="#" class="dropdown-item">Contacto</a>
+                        <a href="{% url 'blog:index' %}?#team" class="dropdown-item">Equipo</a>
+                        <a href="{% url 'blog:index' %}?#testimonial" class="dropdown-item">Testimonios</a>
+                        {% if request.user.is_superuser %}
+                        <a href="{% url 'blog:edit_users_permissions' %}" class="dropdown-item">Editar permisos</a>
+                        {% endif %}
                     </div>
                 </div>
-                <a href="contact.html" class="nav-item nav-link">Contacto</a>
+                {% comment %} <a href="contact.html" class="nav-item nav-link">Contacto</a> {% endcomment %}
+                {% if user.is_authenticated %}
+                <a href="{% url 'blog:logout' %}" class="nav-item nav-link">Salir</a>
+                {% endif %}
             </div>
             <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></butaton>
         </div>

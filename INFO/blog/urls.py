@@ -16,6 +16,10 @@ urlpatterns = [
     path("blog/register", views.register_view, name="register"),
     path("blog/login", views.login_view, name="login"),
     path("blog/logout", views.logout_view, name="logout"),
-    path("blog/new_post", views.new_post_view, name="new_post")
+    path("blog/new_post", views.new_post_view, name="new_post"),
+    path("delete_comment/<int:comentario_id>/", views.delete_comment, name="delete_comment"),
+    path('edit_users/', views.edit_users_permissions, name='edit_users_permissions'),
+    path("post/<int:post_id>/editar/", views.editar_post, name="editar_post"),
+    path("post/<int:post_id>/eliminar/", views.eliminar_post, name="eliminar_post"),
 
 ]

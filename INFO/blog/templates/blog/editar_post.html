@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Post</title>
+</head>
+<body>
+    <h1>Editar Post</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar Cambios</button>
+    </form>
+</body>
+</html>

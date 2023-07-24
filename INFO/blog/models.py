@@ -79,8 +79,8 @@ class Comentario(models.Model):
     id_articulo = models.ForeignKey(Articulo, on_delete=models.CASCADE)
     id_usuario = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
     contenido = models.TextField()
-    fecha_hora = models.DateTimeField()
-    estado = models.BooleanField()
+    fecha_hora = models.DateTimeField(auto_now_add=True)
+    estado = models.BooleanField(default=True)
 
 
 class Categoria_Articulo(models.Model):
