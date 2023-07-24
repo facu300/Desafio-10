@@ -84,7 +84,7 @@
                     <!-- Search Form End -->
 
                     <!-- boton nuevo post inicio -->
-                    {% if request.user.es_colaborador or request.user.is_superuser %}
+                    {% if request.user.es_colaborador or request.user.is_staff %}
                         <div class="d-flex justify-content-center mb-3">
                             <a class="btn btn-primary btn-lg m-2" href="{% url 'blog:new_post' %}" role="button">Nuevo Post</a>
                         </div>
