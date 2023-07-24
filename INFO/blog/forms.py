@@ -11,8 +11,8 @@ class ArticuloForm(forms.ModelForm):
 
         if imagen:
             img = Image.open(imagen)
-            if img.width > 320 or img.height > 320:
-                raise ValidationError("La imagen no puede ser mayor de 320x320 píxeles.")
+            if img.width > 1020 or img.height > 768:
+                raise ValidationError("La imagen no puede ser mayor de 1020x768 píxeles.")
 
         return imagen
 
