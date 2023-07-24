@@ -11,14 +11,9 @@
                     <!-- Blog Detail Start -->
                     <div class="mb-5">
                         <img class="img-fluid w-100 rounded mb-5" src="img/blog-1.jpg" alt="">
-                        <h1 class="mb-4">Diam dolor est labore duo ipsum clita sed et lorem tempor duo</h1>
-                        <p>Sadipscing labore amet rebum est et justo gubergren. Et eirmod ipsum sit diam ut
-                            magna lorem. Nonumy vero labore lorem sanctus rebum et lorem magna kasd, stet
-                            amet magna accusam consetetur eirmod. Kasd accusam sit ipsum sadipscing et at at
-                            sanctus et. Ipsum sit gubergren dolores et, consetetur justo invidunt at et
-                            aliquyam ut et vero clita. Diam sea sea no sed dolores diam nonumy, gubergren
-                            sit stet no diam kasd vero.</p>
-                        <p>Voluptua est takimata stet invidunt sed rebum nonumy stet, clita aliquyam dolores
+                        <h1 class="mb-4">{{ post.titulo }}</h1>
+                        <p>{{ post.contenido }}</p>
+                        {% comment %} <p>Voluptua est takimata stet invidunt sed rebum nonumy stet, clita aliquyam dolores
                             vero stet consetetur elitr takimata rebum sanctus. Sit sed accusam stet sit
                             nonumy kasd diam dolores, sanctus lorem kasd duo dolor dolor vero sit et. Labore
                             ipsum duo sanctus amet eos et. Consetetur no sed et aliquyam ipsum justo et,
@@ -36,7 +31,7 @@
                             nonumy kasd diam dolores, sanctus lorem kasd duo dolor dolor vero sit et. Labore
                             ipsum duo sanctus amet eos et. Consetetur no sed et aliquyam ipsum justo et,
                             clita lorem sit vero amet amet est dolor elitr, stet et no diam sit. Dolor erat
-                            justo dolore sit invidunt.</p>
+                            justo dolore sit invidunt.</p> {% endcomment %}
                     </div>
                     <!-- Blog Detail End -->
     
@@ -76,9 +71,10 @@
                     <!-- Comment List End -->
     
                     <!-- Comment Form Start -->
+                    {% if user.is_authenticated %}
                     <div class="bg-light rounded p-5">
                         <div class="section-title section-title-sm position-relative pb-3 mb-4">
-                            <h3 class="mb-0">Leave A Comment</h3>
+                            <h3 class="mb-0">Deje su comentario</h3>
                         </div>
                         <form>
                             <div class="row g-3">
@@ -95,11 +91,17 @@
                                     <textarea class="form-control bg-white border-0" rows="5" placeholder="Comment"></textarea>
                                 </div>
                                 <div class="col-12">
-                                    <button class="btn btn-primary w-100 py-3" type="submit">Leave Your Comment</button>
+                                    <button class="btn btn-primary w-100 py-3" type="submit">Deje su comentario</button>
                                 </div>
                             </div>
                         </form>
                     </div>
+                    {% else %}
+                    <h5 class="mb-0">Ingrese para comentar</h3>
+                        <div align="center">
+                        <a href="{% url 'blog:login' %}" class="btn btn-primary py-md-3 px-md-5 animated slideInRight">Ingresar</a>
+                        </div>
+                    {% endif %}
                     <!-- Comment Form End -->
                 </div>
     

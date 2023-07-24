@@ -1,11 +1,24 @@
 from django import forms
 from .models import Articulo, Categoria, Etiqueta, Usuarios, Comentario, Categoria_Articulo
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.core.exceptions import ValidationError 
+from PIL import Image
 
 class ArticuloForm(forms.ModelForm):
+    
+    def clean_imagen(self):
+        imagen = self.cleaned_data['imagen']
+
+        if imagen:
+            img = Image.open(imagen)
+            if img.width > 320 or img.height > 320:
+                raise ValidationError("La imagen no puede ser mayor de 320x320 píxeles.")
+
+        return imagen
+
     class Meta:
         model = Articulo
-        fields = ['titulo', 'bajada', 'contenido', 'imagen', 'publicado', 'categoria', 'autor', 'etiqueta']
+        fields = ['titulo', 'bajada', 'contenido', 'imagen']
 
 class CategoriaForm(forms.ModelForm):
     class Meta:
@@ -18,10 +31,20 @@ class EtiquetaForm(forms.ModelForm):
         fields = ['nombre', 'activo']
 
 class UsuariosForm(UserCreationForm):
-    # password = forms.CharField(widget=forms.PasswordInput)
+    
+    def __init__(self, *args, **kwargs):            # Estas lineas de código borran las helps que
+        super().__init__(*args, **kwargs)           # dejan feo el formulario
+        self.fields['username'].help_text = None 
+        self.fields['password1'].help_text = None
+        self.fields['password2'].help_text = None
     class Meta:
         model = Usuarios
-        fields = ['username','email']
+        fields = ['username','email','first_name', 'last_name']
+
+class LoginForm(AuthenticationForm):
+    # Este formulario hereda de AuthenticationForm, por lo que no es necesario agregar campos adicionales.
+    # Es solo para importar el formulario y usarlo en las views
+    pass
 
 
 class PermisosUsuarioForm(forms.ModelForm):

@@ -10,7 +10,7 @@
 <!-- Navbar Start -->
 <div class="container-fluid position-relative p-0">
     <nav class="navbar navbar-expand-lg navbar-dark px-5 py-3 py-lg-0">
-        <a href="index.html" class="navbar-brand p-0">
+        <a href="{% url 'blog:index' %}" class="navbar-brand p-0">
             <h1 class="m-0"><i class="fa fa-user-tie me-2"></i>TecnoPower</h1>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -18,8 +18,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto py-0">
-                <a href="{% url 'blog:index' %}" class="nav-item nav-link">Home</a>
-                <a href="about.html" class="nav-item nav-link">About</a>
+                <a href="{% url 'blog:index' %}" class="nav-item nav-link">Inicio</a>
+                <a href="about.html" class="nav-item nav-link">Acerca de</a>
                 <a href="{% url 'blog:blog' %}" class="nav-item nav-link active">Blog</a>
                 {% comment %} <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Blog</a>
@@ -38,7 +38,7 @@
                         <a href="quote.html" class="dropdown-item">Free Quote</a>
                     </div>
                 </div>
-                <a href="contact.html" class="nav-item nav-link">Contact</a>
+                <a href="contact.html" class="nav-item nav-link">Contacto</a>
             </div>
             <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></butaton>
         </div>

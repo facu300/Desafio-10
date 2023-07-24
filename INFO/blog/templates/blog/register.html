@@ -5,15 +5,17 @@
 {% block content %}
 
 <div align="center">
-    <h1>Registro de Usuarios</h1>
+    <h1 style= 'margin: 1em'>Registro de Usuarios</h1>
     <div style="text-align: center;">
-        <form method="post" style="display: inline-block; text-align: center;">
+        
+        <form method="post" style="display: inline-block; text-align: center; margin: 1em">
             {% csrf_token %}
             <table>
                 {{ form.as_table }}
+                {{ form.errors }}
             </table>
-            {{ form.errors }}
-            <input type="submit" value="Registrarse">
+            
+            <input type="submit" value="Registrarse" style="margin: 1em">
         </form>
     </div>
 </div>

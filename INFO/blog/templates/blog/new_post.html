@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items center" >
+    <div class="card" style="width: 26rem; margin: 1em">
+        <h1 align="center">Nueva publicación</h1>
+        <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            
+            {% csrf_token %}
+            {{ form.as_p }}
+            
+            <button type="submit">Publicar</button>
+        
+        </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
