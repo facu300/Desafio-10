@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div align="center">
+    <h1 style="margin: 1em;">Modificar Usuario</h1>
+    <div style="text-align: center;">
+        <form method="post" style="display: inline-block; text-align: center; margin: 1em" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <th><label for="{{ form.first_name.id_for_label }}">Nombre:</label></th>
+                    <td>{{ form.first_name }}</td>
+                </tr>
+                <tr>
+                    <th><label for="{{ form.last_name.id_for_label }}">Apellido:</label></th>
+                    <td>{{ form.last_name }}</td>
+                </tr>
+                <tr>
+                    <th><label>Avatar actual:</label></th>
+                    <td><img src="{{ user.avatar.url }}" alt="Avatar" width="150"></td>
+                </tr>
+                <tr>
+                    <th><label for="id_avatar_nuevo">Cambiar avatar:</label></th>
+                    <td><input type="file" name="{{ form.avatar.name }}" accept="image/*"></td>
+                </tr>
+            </table>
+            {{ form.errors }}
+            <input type="submit" value="Guardar cambios" style="margin: 1em">
+        </form>
+    </div>
+</div>
+{% endblock %}

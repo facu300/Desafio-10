@@ -1,14 +1,45 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Editar Post</title>
-</head>
-<body>
-    <h1>Editar Post</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Guardar Cambios</button>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+
+{% block content %}
+
+
+<div align="center">
+    <h1 style="margin: 1em;">Editar publicación</h1>
+    <div style="text-align: center;">
+        <form method="post" style="display: inline-block; text-align: left; margin: 1em; max-width: 400px;" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table style="margin: 0 auto;">
+                <tr>
+                    <th style="text-align: left;"><label for="{{ form.titulo.id_for_label }}" style="font-weight: bold;">Título:</label></th>
+                    <td>{{ form.titulo }}</td>
+                </tr>
+                <tr>
+                    <th style="text-align: left;"><label for="{{ form.bajada.id_for_label }}" style="font-weight: bold;">Bajada:</label></th>
+                    <td>{{ form.bajada }}</td>
+                </tr>
+                <tr>
+                    <th style="text-align: left;"><label for="{{ form.contenido.id_for_label }}" style="font-weight: bold;">Contenido:</label></th>
+                    <td>{{ form.contenido }}</td>
+                </tr>
+                {% if form.instance.imagen %}
+                <tr>
+                    <th style="text-align: left; vertical-align: top;"><label style="font-weight: bold;">Imagen actual:</label></th>
+                    <td><img src="{{ form.instance.imagen.url }}" alt="Imagen del post" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; padding: 5px;"></td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <th style="text-align: left;"><label for="id_imagen_nueva" style="font-weight: bold;">Cambiar imagen:</label></th>
+                    <td><input type="file" name="{{ form.imagen.name }}" accept="image/*"></td>
+                </tr>
+            </table>
+            {{ form.errors }}
+            <input type="submit" value="Guardar cambios" style="margin: 1em">
+        </form>
+    </div>
+</div>
+{% endblock %}
+

@@ -7,7 +7,9 @@ from django.conf import settings # para que funcione el modelo de autenticación
 class Usuarios(AbstractUser, PermissionsMixin):
     
     
-    avatar = models.CharField(max_length=250)
+    # avatar = models.CharField(max_length=250)
+    # avatar = models.ImageField(upload_to='media', null=True)
+    avatar = models.ImageField(upload_to='media/avatars', default=settings.DEFAULT_USER_AVATAR)
     es_publico = models.BooleanField(default=True)
     es_colaborador = models.BooleanField(default=False)
     
@@ -23,6 +25,14 @@ class Usuarios(AbstractUser, PermissionsMixin):
         blank=True,
         related_name='usuarios_permission_set'  # Puedes cambiar 'usuarios_permission_set' por el nombre que prefieras
     )
+
+    def save(self, *args, **kwargs):
+        # Si el usuario es nuevo (no tiene ID asignado) y el campo avatar está vacío,
+        # se asigna la imagen por defecto.
+        if not self.id and not self.avatar:
+            self.avatar = settings.DEFAULT_USER_AVATAR
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.username
@@ -55,7 +65,7 @@ class Etiqueta(models.Model):
 
 class Articulo(models.Model):
     titulo = models.CharField(max_length=250)
-    bajada = models.CharField(max_length=600)         # este lo llamé así por el desafio 12 que bajaron
+    bajada = models.TextField()         # este lo llamé así por el desafio 12 que bajaron
     contenido = models.TextField()
     imagen = models.ImageField(upload_to='media', null=True)
     publicado = models.BooleanField(default=True)

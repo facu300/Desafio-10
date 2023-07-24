@@ -61,3 +61,23 @@ class CategoriaArticuloForm(forms.ModelForm):
     class Meta:
         model = Categoria_Articulo
         fields = ['id_articulo', 'id_categoria']
+
+
+class ModificarUsuarioForm(forms.ModelForm):
+    def clean_imagen(self):
+        avatar = self.cleaned_data['avatar']
+
+        if avatar:
+            img = Image.open(avatar)
+            if img.width > 1020 or img.height > 768:
+                raise ValidationError("La imagen no puede ser mayor de 1020x768 píxeles.")
+
+        return avatar
+
+    class Meta:
+        model = Usuarios
+        fields = ['first_name', 'last_name', 'avatar']
+
+    def __init__(self, *args, **kwargs):
+        super(ModificarUsuarioForm, self).__init__(*args, **kwargs)
+        self.fields['avatar'].required = False

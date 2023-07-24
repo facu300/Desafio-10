@@ -128,3 +128,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'blog/')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'blog.Usuarios'
+
+DEFAULT_USER_AVATAR = os.path.join(MEDIA_URL,'avatars/default_avatar.png' )

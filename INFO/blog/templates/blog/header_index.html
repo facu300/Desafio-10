@@ -28,7 +28,7 @@
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Más</a>
                     <div class="dropdown-menu m-0">
                         {% if user.is_authenticated %}
-                        <a href="#" class="dropdown-item">Perfil</a>
+                        <a href="{% url 'blog:modify_user' %}" class="dropdown-item">Perfil</a>
                         {% endif %}
                         <a href="#" class="dropdown-item">Acerca de</a>
                         <a href="#" class="dropdown-item">Contacto</a>

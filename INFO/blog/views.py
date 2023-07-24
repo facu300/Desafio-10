@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from . import models
 from django.urls import reverse
 from django.views import generic
-from .forms import UsuariosForm, LoginForm, ArticuloForm, ComentarioForm
+from .forms import UsuariosForm, LoginForm, ArticuloForm, ComentarioForm, ModificarUsuarioForm
 from django.contrib.auth import login, logout, authenticate
 from .models import Articulo, Comentario, Usuarios
 # from django.contrib.auth.forms import UserCreationForm
@@ -179,3 +179,17 @@ def eliminar_post(request, post_id, confirmacion=False):
         return redirect('blog:blog')
 
     return render(request, 'eliminar_post.html', {'post': post})
+
+
+def modify_user(request):
+    if request.user.is_anonymous:
+        return redirect('blog:index')
+    if request.method == 'POST':
+        form = ModificarUsuarioForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('blog:index')
+    else:
+        form = ModificarUsuarioForm(instance=request.user)
+
+    return render(request, 'modify_user.html', {'form': form})

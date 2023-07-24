@@ -21,5 +21,6 @@ urlpatterns = [
     path('edit_users/', views.edit_users_permissions, name='edit_users_permissions'),
     path("post/<int:post_id>/editar/", views.editar_post, name="editar_post"),
     path("post/<int:post_id>/eliminar/", views.eliminar_post, name="eliminar_post"),
+    path("blog/modify_user", views.modify_user, name="modify_user"),
 
 ]
