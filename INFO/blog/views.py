@@ -174,7 +174,8 @@ def editar_post(request, post_id):
 def eliminar_post(request, post_id, confirmacion=False):
     post = get_object_or_404(Articulo, pk=post_id)
 
-    if confirmacion:
+    if request.method == 'POST':
+    # if confirmacion:
         post.delete()
         return redirect('blog:blog')
 
