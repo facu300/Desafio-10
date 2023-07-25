@@ -69,7 +69,7 @@ class Articulo(models.Model):
     contenido = models.TextField()
     imagen = models.ImageField(upload_to='media', null=True)
     publicado = models.BooleanField(default=True)
-    categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True)
+    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, null=True)
     autor = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, null=False

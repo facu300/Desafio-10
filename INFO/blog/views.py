@@ -5,9 +5,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from . import models
 from django.urls import reverse
 from django.views import generic
-from .forms import UsuariosForm, LoginForm, ArticuloForm, ComentarioForm, ModificarUsuarioForm
+from .forms import UsuariosForm, LoginForm, ArticuloForm, ComentarioForm, ModificarUsuarioForm, CategoriaCrearEditarForm
 from django.contrib.auth import login, logout, authenticate
-from .models import Articulo, Comentario, Usuarios
+from .models import Articulo, Comentario, Usuarios, Categoria
 # from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import user_passes_test
 # from django.contrib.auth.models import User
@@ -20,14 +20,16 @@ def index_view(request):
     return render(request, 'index.html', context)
 
 def blog(request):
-    # Obtener todos los posts
+    # Obtengo todos los posts
     posts = Articulo.objects.all()
-
-    # Obtener los últimos 6 artículos ordenados por fecha de creación
+    # Obtengo todas las categorías
+    categorias = Categoria.objects.all()
+    # Obtengo los últimos 6 artículos ordenados por fecha de creación
     ultimos_post = Articulo.objects.filter(publicado=True).order_by('-creacion')[:6]
 
     context = {
         'posts': posts,
+        'categorias': categorias,
         'ultimos_post': ultimos_post
     }
     return render(request, "blog/blog.html", context)
@@ -42,6 +44,9 @@ def blog(request):
 
 def post(request, post_id):
     post = get_object_or_404(Articulo, pk=post_id)
+
+    # Obtengo todas las categorías
+    categorias = Categoria.objects.all()
 
     # Obtener los últimos 6 artículos ordenados por fecha de creación
     ultimos_post = Articulo.objects.filter(publicado=True).exclude(id=post_id).order_by('-creacion')[:6]
@@ -58,8 +63,15 @@ def post(request, post_id):
             comentario.save()
     
     comentarios = Comentario.objects.filter(id_articulo=post_id)
+
+    context = {
+        'post': post,
+        'categorias': categorias,
+        'ultimos_post': ultimos_post,
+        'comentarios': comentarios,
+    }
     
-    return render(request, 'post.html', {'post': post, 'comentarios': comentarios, 'ultimos_post': ultimos_post})
+    return render(request, 'post.html', context )
 
 
 def register_view(request):
@@ -194,3 +206,54 @@ def modify_user(request):
         form = ModificarUsuarioForm(instance=request.user)
 
     return render(request, 'modify_user.html', {'form': form})
+
+
+#################################### Bloque creación edición de categorías ##########
+
+
+
+def crear_editar_categorias(request):
+    categorias = Categoria.objects.all()
+    categoria_seleccionada = None
+
+    if request.method == 'POST':
+        if 'categoria_seleccionada' in request.POST and request.POST['categoria_seleccionada'] != '':
+            # If a category is selected, edit it
+            categoria_seleccionada = get_object_or_404(Categoria, pk=request.POST['categoria_seleccionada'])
+            form = CategoriaCrearEditarForm(request.POST, instance=categoria_seleccionada)
+            if 'eliminar_categoria' in request.POST:
+                categoria_seleccionada.delete()
+                return redirect('blog:crear_editar_categorias')
+        else:
+            # If no category is selected, create a new one
+            form = CategoriaCrearEditarForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('blog:crear_editar_categorias')
+
+    else:
+        id_categoria = request.GET.get('categoria_seleccionada')
+        if id_categoria:
+            categoria_seleccionada = get_object_or_404(Categoria, pk=id_categoria)
+            form = CategoriaCrearEditarForm(instance=categoria_seleccionada)
+        else:
+            form = CategoriaCrearEditarForm()
+
+    return render(request, 'crear_editar_categorias.html', {'form': form, 'categorias': categorias, 'categoria_seleccionada': categoria_seleccionada})
+
+
+
+
+from django.http import JsonResponse
+def categoria_json(request, categoria_id):
+    categoria = get_object_or_404(Categoria, pk=categoria_id)
+    data = {
+        'nombre': categoria.nombre,
+        'activo': categoria.activo,
+        'descripcion': categoria.descripcion,
+    }
+    return JsonResponse(data)
+
+
+#################### Bloque renderización por categoría/etiqueta ###################

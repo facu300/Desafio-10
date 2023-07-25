@@ -1,0 +1,57 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items center" >
+    <div class="card" style="width: 18rem; margin: 1em">
+    <h1>Crear o Editar Categoría</h1>
+    
+    <div class="card-body">
+        
+    <form method="post">
+        {% csrf_token %}
+        {% if categorias %}
+            <label for="categoria_seleccionada">Seleccione una categoría o creela:</label>
+            <br>
+            <select id="categoria_seleccionada" name="categoria_seleccionada">
+                <option value="" selected>Seleccione una categoría</option>
+                {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                {% endfor %}
+            </select>
+            
+            <br>
+        {% endif %}
+        {{ form.as_p }}
+        <input type="submit" value="Crear/Guardar">
+        <button type="submit" name="eliminar_categoria">Eliminar</button>
+    </form>
+
+    {% if form.errors %}
+        <div style="color: red;">
+            {{ form.errors }}
+        </div>
+    {% endif %}
+</div>
+</div>
+
+</div>
+
+    <script>
+        document.getElementById('categoria_seleccionada').addEventListener('change', function() {
+            var categoriaId = this.value;
+            if (categoriaId) {
+                fetch('/categoria/' + categoriaId + '/json/')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('id_nombre').value = data.nombre;
+                    document.getElementById('id_activo').checked = data.activo;
+                    document.getElementById('id_descripcion').value = data.descripcion;
+                });
+            }
+        });
+    </script>
+    {% endblock %}

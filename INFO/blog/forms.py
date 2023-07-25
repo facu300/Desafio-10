@@ -18,7 +18,7 @@ class ArticuloForm(forms.ModelForm):
 
     class Meta:
         model = Articulo
-        fields = ['titulo', 'bajada', 'contenido', 'imagen']
+        fields = ['titulo', 'bajada', 'contenido', 'categoria', 'imagen']
 
 class CategoriaForm(forms.ModelForm):
     class Meta:
@@ -81,3 +81,17 @@ class ModificarUsuarioForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ModificarUsuarioForm, self).__init__(*args, **kwargs)
         self.fields['avatar'].required = False
+
+
+#############
+
+
+class CategoriaCrearEditarForm(forms.ModelForm):
+    class Meta:
+        model = Categoria
+        fields = ['nombre', 'activo', 'descripcion']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'required': 'required'}),
+            'activo': forms.CheckboxInput(),
+            'descripcion': forms.Textarea(attrs={'rows': 3, 'cols':25}),
+        }
