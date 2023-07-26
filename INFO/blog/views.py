@@ -8,6 +8,8 @@ from django.views import generic
 from .forms import UsuariosForm, LoginForm, ArticuloForm
 from django.contrib.auth import login, logout, authenticate
 from .models import Articulo
+from django.core.paginator import Paginator
+
 # from django.contrib.auth.forms import UserCreationForm
 
 def index_view(request):
@@ -19,9 +21,14 @@ def index_view(request):
 def blog(request):
     # Obtener todos los posts
     posts = Articulo.objects.all()
+    paginator = Paginator(posts, 3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
-        'posts': posts
+        'posts': posts,
+        'page_obj' : page_obj,   
     }
+    
     return render(request, "blog/blog.html", context)
 
 # class BlogView(generic.TemplateView):
