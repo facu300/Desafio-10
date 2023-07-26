@@ -89,6 +89,11 @@
                     <div class="d-flex justify-content-center mb-3">
                         <a class="btn btn-primary btn-lg m-2" href="{% url 'blog:new_post' %}" role="button">Nuevo Post</a>
                     </div>
+                        {% if request.user.is_staff %}
+                        <div class="d-flex justify-content-center mb-3">
+                            <a class="btn btn-success btn-sm m-2" href="{% url 'blog:crear_editar_categorias' %}" role="button">Editar Categorías</a>
+                        </div>
+                        {% endif %}
                     {% endif %}
                     <!-- boton nuevo post fin -->
                     
@@ -99,14 +104,9 @@
                         </div>
                         <div class="link-animated d-flex flex-column justify-content-start">
                             {% for categoria in categorias %}
-                            <a class="h5 fw-semi-bold bg-light rounded py-2 px-3 mb-2" href="#"><i class="bi bi-arrow-right me-2"></i> {{categoria.nombre}}</a>
+                            <a class="h5 fw-semi-bold bg-light rounded py-2 px-3 mb-2" href="{% url 'blog:blog' %}?categoria={{ categoria.nombre }}"><i class="bi bi-arrow-right me-2"></i> {{categoria.nombre}}</a>
                             {% endfor %}
-                            <a class="h5 fw-semi-bold bg-light rounded py-2 px-3 mb-2" href="#"><i class="bi bi-arrow-right me-2"></i>Web Design</a>
-                            <a class="h5 fw-semi-bold bg-light rounded py-2 px-3 mb-2" href="#"><i class="bi bi-arrow-right me-2"></i>Web Development</a>
-                            <a class="h5 fw-semi-bold bg-light rounded py-2 px-3 mb-2" href="#"><i class="bi bi-arrow-right me-2"></i>Web Development</a>
-                            <a class="h5 fw-semi-bold bg-light rounded py-2 px-3 mb-2" href="#"><i class="bi bi-arrow-right me-2"></i>Keyword Research</a>
-                            <a class="h5 fw-semi-bold bg-light rounded py-2 px-3 mb-2" href="#"><i class="bi bi-arrow-right me-2"></i>Email Marketing</a>
-                        </div>
+                            </div>
                     </div>
                     <!-- Category End -->
                     

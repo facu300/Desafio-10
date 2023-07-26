@@ -20,19 +20,38 @@ def index_view(request):
     return render(request, 'index.html', context)
 
 def blog(request):
-    # Obtengo todos los posts
-    posts = Articulo.objects.all()
-    # Obtengo todas las categorías
-    categorias = Categoria.objects.all()
-    # Obtengo los últimos 6 artículos ordenados por fecha de creación
-    ultimos_post = Articulo.objects.filter(publicado=True).order_by('-creacion')[:6]
+    nombre = request.GET.get('categoria', None)
 
-    context = {
-        'posts': posts,
-        'categorias': categorias,
-        'ultimos_post': ultimos_post
-    }
-    return render(request, "blog/blog.html", context)
+    if nombre is not None:
+        posts = Articulo.objects.filter(categoria__nombre=nombre).order_by('-creacion')[:6]
+
+        categorias = Categoria.objects.all()
+        # Obtengo los últimos 6 artículos ordenados por fecha de creación
+        ultimos_post = Articulo.objects.filter(publicado=True).order_by('-creacion')[:6]
+
+        context = {
+            'posts': posts,
+            'categorias': categorias,
+            'ultimos_post': ultimos_post
+        }
+        return render(request, "blog/blog.html", context)
+
+
+    else:
+
+        # Obtengo todos los posts
+        posts = Articulo.objects.all()
+        # Obtengo todas las categorías
+        categorias = Categoria.objects.all()
+        # Obtengo los últimos 6 artículos ordenados por fecha de creación
+        ultimos_post = Articulo.objects.filter(publicado=True).order_by('-creacion')[:6]
+
+        context = {
+            'posts': posts,
+            'categorias': categorias,
+            'ultimos_post': ultimos_post
+        }
+        return render(request, "blog/blog.html", context)
 
 # class BlogView(generic.TemplateView):
 #     template_name = "blog/base.html"
