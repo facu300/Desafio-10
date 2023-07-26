@@ -24,7 +24,7 @@
                                 <!-- Si no hay imagen, se puede mostrar una imagen predeterminada o dejar este espacio en blanco -->
                                 <img class="img-fluid" src="{% static 'blog/img/blog-3.jpg' %}" alt="No Image">
                                 {% endif %}
-                                <a class="position-absolute top-0 start-0 bg-primary text-white rounded-end mt-5 py-2 px-4" href="{% url 'blog:post' post.id %}">Web Design</a>
+                                <a class="position-absolute top-0 start-0 bg-primary text-white rounded-end mt-5 py-2 px-4" href="{% url 'blog:post' post.id %}">{{post.categoria}}</a>
                             </div>
                             <div class="p-4">
                                 <div class="d-flex mb-3">
@@ -93,6 +93,9 @@
                         <div class="d-flex justify-content-center mb-3">
                             <a class="btn btn-success btn-sm m-2" href="{% url 'blog:crear_editar_categorias' %}" role="button">Editar Categorías</a>
                         </div>
+                        <div class="d-flex justify-content-center mb-3">
+                            <a class="btn btn-success btn-sm m-2" href="{% url 'blog:crear_editar_etiqueta' %}" role="button">Editar Etiquetas</a>
+                        </div>
                         {% endif %}
                     {% endif %}
                     <!-- boton nuevo post fin -->
@@ -106,7 +109,7 @@
                             {% for categoria in categorias %}
                             <a class="h5 fw-semi-bold bg-light rounded py-2 px-3 mb-2" href="{% url 'blog:blog' %}?categoria={{ categoria.nombre }}"><i class="bi bi-arrow-right me-2"></i> {{categoria.nombre}}</a>
                             {% endfor %}
-                            </div>
+                        </div>
                     </div>
                     <!-- Category End -->
                     
@@ -124,14 +127,6 @@
                         
                     </div>
                     <!-- Recent Post End -->
-    
-                    <!-- Image Start -->
-                    
-                        <div class="mb-5 wow slideInUp" data-wow-delay="0.1s">
-                            <img src="{% static 'blog/img/blog-1.jpg' %}" alt="" class="img-fluid rounded">
-                        </div>
-                        
-                        <!-- Image End -->
                         
                         <!-- Tags Start -->
                         <div class="mb-5 wow slideInUp" data-wow-delay="0.1s">
@@ -139,18 +134,10 @@
                                 <h3 class="mb-0">Tag Cloud</h3>
                             </div>
                             <div class="d-flex flex-wrap m-n1">
-                                <a href="" class="btn btn-light m-1">Design</a>
-                                <a href="" class="btn btn-light m-1">Development</a>
-                                <a href="" class="btn btn-light m-1">Marketing</a>
-                                <a href="" class="btn btn-light m-1">SEO</a>
-                                <a href="" class="btn btn-light m-1">Writing</a>
-                                <a href="" class="btn btn-light m-1">Consulting</a>
-                                <a href="" class="btn btn-light m-1">Design</a>
-                                <a href="" class="btn btn-light m-1">Development</a>
-                                <a href="" class="btn btn-light m-1">Marketing</a>
-                                <a href="" class="btn btn-light m-1">SEO</a>
-                                <a href="" class="btn btn-light m-1">Writing</a>
-                                <a href="" class="btn btn-light m-1">Consulting</a>
+                                {% for etiqueta in etiquetas  %}
+                                    <a href="{% url 'blog:blog' %}?tags={{ etiqueta.nombre }}" class="btn btn-light m-1">{{etiqueta.nombre}}</a>
+                                {% endfor %}
+                                
                             </div>
                         </div>
                         <!-- Tags End -->
@@ -161,4 +148,4 @@
     </div>
     <!-- Blog End -->
     {% endblock %}
-    <div class="container py-5">
+    

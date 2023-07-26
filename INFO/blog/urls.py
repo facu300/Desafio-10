@@ -24,5 +24,6 @@ urlpatterns = [
     path("blog/modify_user", views.modify_user, name="modify_user"),
     path("categorias/", views.crear_editar_categorias, name="crear_editar_categorias"),
     path('categoria/<int:categoria_id>/json/', views.categoria_json, name='categoria_json'),
+    path('etiqueta/nueva-o-editar/', views.crear_editar_etiqueta, name='crear_editar_etiqueta'),
 
 ]

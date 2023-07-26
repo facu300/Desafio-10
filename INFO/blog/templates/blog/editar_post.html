@@ -7,7 +7,46 @@
 {% block content %}
 
 
-<div align="center">
+
+<div class="container d-flex justify-content-center align-items center">
+    <div class="card" style="width: 26rem; margin: 1em">
+    <h1 align="center">Editar publicación</h1>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+                <p><label for="{{ form.titulo.id_for_label }}">Título:</label>
+                    {{ form.titulo }}</p>
+                    <p><label for="{{ form.bajada.id_for_label }}">Bajada:</label>
+                    {{ form.bajada }}</p>
+
+                    <p><label for="{{ form.contenido.id_for_label }}" >Contenido:</label>
+                        {{ form.contenido }}</p>
+                    <p>{% if form.instance.imagen %}
+                        <label>Imagen actual:</label>
+                                <img src="{{ form.instance.imagen.url }}" alt="Imagen del post" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; padding: 5px;"></td>
+                        </tr>
+                        {% endif %}
+                    </p>
+
+                    <p><label for="id_imagen_nueva">Cambiar imagen:</label>
+                        <input type="file" name="{{ form.imagen.name }}" accept="image/*"></p>
+
+                    <p><label for="{{ form.categoria.id_for_label }}" >Categorias:</label>
+                            {{ form.categoria }}</p>
+                    
+                    <p><label for="{{ form.etiqueta.id_for_label }}" >Etiquetas:</label>
+                            {{ form.etiqueta }}</p>
+            
+            {{ form.errors }}
+            <input type="submit" value="Guardar cambios" style="margin: 1em">
+        </form>
+    </div>
+</div>
+</div>
+
+
+{% comment %} <div align="center">
     <h1 style="margin: 1em;">Editar publicación</h1>
     <div style="text-align: center;">
         <form method="post" style="display: inline-block; text-align: left; margin: 1em; max-width: 400px;" enctype="multipart/form-data">
@@ -39,7 +78,7 @@
             {{ form.errors }}
             <input type="submit" value="Guardar cambios" style="margin: 1em">
         </form>
-    </div>
-</div>
+    </div> {% endcomment %}
+
 {% endblock %}
 

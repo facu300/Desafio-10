@@ -5,9 +5,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from . import models
 from django.urls import reverse
 from django.views import generic
-from .forms import UsuariosForm, LoginForm, ArticuloForm, ComentarioForm, ModificarUsuarioForm, CategoriaCrearEditarForm
+from .forms import UsuariosForm, LoginForm, ArticuloForm, ComentarioForm, ModificarUsuarioForm, CategoriaCrearEditarForm, EtiquetaForm
 from django.contrib.auth import login, logout, authenticate
-from .models import Articulo, Comentario, Usuarios, Categoria
+from .models import Articulo, Comentario, Usuarios, Categoria, Etiqueta, Categoria_Articulo
 # from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import user_passes_test
 # from django.contrib.auth.models import User
@@ -21,6 +21,8 @@ def index_view(request):
 
 def blog(request):
     nombre = request.GET.get('categoria', None)
+    tags_nombre = request.GET.get('tags', None)
+    print(tags_nombre)
 
     if nombre is not None:
         posts = Articulo.objects.filter(categoria__nombre=nombre).order_by('-creacion')[:6]
@@ -29,15 +31,39 @@ def blog(request):
         # Obtengo los últimos 6 artículos ordenados por fecha de creación
         ultimos_post = Articulo.objects.filter(publicado=True).order_by('-creacion')[:6]
 
+        # Obtengo todas las etiquetas
+        etiquetas = Etiqueta.objects.all()
+
+
         context = {
             'posts': posts,
             'categorias': categorias,
-            'ultimos_post': ultimos_post
+            'ultimos_post': ultimos_post,
+            'etiquetas': etiquetas
+        }
+        return render(request, "blog/blog.html", context)
+    
+    elif tags_nombre is not None:
+        print('entro acá')
+
+        posts = Articulo.objects.filter(etiqueta__nombre=tags_nombre).order_by('-creacion')[:6]
+        categorias = Categoria.objects.all()
+        # Obtengo los últimos 6 artículos ordenados por fecha de creación
+        ultimos_post = Articulo.objects.filter(publicado=True).order_by('-creacion')[:6]
+
+        etiquetas = Etiqueta.objects.all()
+
+        context = {
+            'posts': posts,
+            'categorias': categorias,
+            'ultimos_post': ultimos_post,
+            'etiquetas': etiquetas
         }
         return render(request, "blog/blog.html", context)
 
 
     else:
+        print('paso de largo')
 
         # Obtengo todos los posts
         posts = Articulo.objects.all()
@@ -45,21 +71,17 @@ def blog(request):
         categorias = Categoria.objects.all()
         # Obtengo los últimos 6 artículos ordenados por fecha de creación
         ultimos_post = Articulo.objects.filter(publicado=True).order_by('-creacion')[:6]
+        # Obtengo todas las etiquetas
+        etiquetas = Etiqueta.objects.all()
 
         context = {
             'posts': posts,
             'categorias': categorias,
-            'ultimos_post': ultimos_post
+            'ultimos_post': ultimos_post,
+            'etiquetas': etiquetas
         }
         return render(request, "blog/blog.html", context)
 
-# class BlogView(generic.TemplateView):
-#     template_name = "blog/base.html"
-
-
-# def post(request, post_id):                                # renderizar post
-#     post = get_object_or_404(Articulo, pk=post_id)
-#     return render(request, 'post.html', {'post': post})
 
 def post(request, post_id):
     post = get_object_or_404(Articulo, pk=post_id)
@@ -67,8 +89,9 @@ def post(request, post_id):
     # Obtengo todas las categorías
     categorias = Categoria.objects.all()
 
-    # Obtener los últimos 6 artículos ordenados por fecha de creación
+    # Obtengo los últimos 6 artículos ordenados por fecha de creación
     ultimos_post = Articulo.objects.filter(publicado=True).exclude(id=post_id).order_by('-creacion')[:6]
+
     
     if request.method == 'POST':
         comentario_texto = request.POST.get('comentario', '')
@@ -82,12 +105,15 @@ def post(request, post_id):
             comentario.save()
     
     comentarios = Comentario.objects.filter(id_articulo=post_id)
+    etiquetas = Etiqueta.objects.filter(articulo__id=post_id)
+    print(f"{etiquetas}")
 
     context = {
         'post': post,
         'categorias': categorias,
         'ultimos_post': ultimos_post,
         'comentarios': comentarios,
+        'etiquetas': etiquetas,
     }
     
     return render(request, 'post.html', context )
@@ -159,7 +185,7 @@ def new_post_view(request):
 def delete_comment(request, comentario_id):
     if request.method == "POST":
         comentario = get_object_or_404(Comentario, pk=comentario_id)
-        if comentario.id_usuario == request.user:
+        if comentario.id_usuario == request.user or request.user.is_staff:
             comentario.delete()
     return redirect('blog:post', post_id=comentario.id_articulo.id)
 
@@ -167,7 +193,7 @@ def delete_comment(request, comentario_id):
 # ----------------------------------- Edición de Permisos -----------------------
 
 def is_admin(user):
-    return user.is_superuser
+    return user.is_staff
 
 
 @user_passes_test(is_admin, login_url='/')
@@ -275,4 +301,53 @@ def categoria_json(request, categoria_id):
     return JsonResponse(data)
 
 
-#################### Bloque renderización por categoría/etiqueta ###################
+#################### Bloque edición etiqueta ###################
+
+# def crear_editar_etiqueta(request, id_etiqueta=None):
+#     etiqueta = get_object_or_404(Etiqueta, pk=id_etiqueta) if id_etiqueta else None
+
+#     if request.method == 'POST':
+#         if 'eliminar' in request.POST and etiqueta:
+#             etiqueta.delete()
+#             return redirect('blog:crear_editar_etiqueta')  # Reemplaza esto con la URL de la lista de etiquetas
+
+#         form = EtiquetaForm(request.POST, instance=etiqueta)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('blog:crear_editar_etiqueta')  # Reemplaza esto con la URL de la lista de etiquetas
+
+#     else:
+#         form = EtiquetaForm(instance=etiqueta)
+
+#     return render(request, 'manage_tags.html', {'form': form, 'etiqueta': etiqueta})
+from django.contrib import messages
+
+def crear_editar_etiqueta(request):
+    etiqueta_id = request.GET.get('id_etiqueta', None)
+    etiqueta = get_object_or_404(Etiqueta, pk=etiqueta_id) if etiqueta_id else None
+    etiquetas_existentes = Etiqueta.objects.all()
+
+    if request.method == 'POST':
+        form = EtiquetaForm(request.POST, instance=etiqueta)
+
+        if form.is_valid():
+            form.save()
+            if etiqueta:
+                messages.success(request, 'Etiqueta actualizada exitosamente.')
+            else:
+                messages.success(request, 'Etiqueta creada exitosamente.')
+            return redirect('blog:crear_editar_etiqueta')
+
+        # Obtener el formulario de eliminación de etiquetas seleccionadas
+        if 'eliminar_seleccionadas' in request.POST:
+            etiquetas_seleccionadas = request.POST.getlist('eliminar_etiqueta')
+            if etiquetas_seleccionadas:
+                etiquetas_eliminar = Etiqueta.objects.filter(pk__in=etiquetas_seleccionadas)
+                etiquetas_eliminar.delete()
+                messages.success(request, 'Etiquetas eliminadas exitosamente.')
+                return redirect('blog:crear_editar_etiqueta')
+
+    else:
+        form = EtiquetaForm(instance=etiqueta)
+
+    return render(request, 'manage_tags.html', {'form': form, 'etiquetas_existentes': etiquetas_existentes, 'etiqueta': etiqueta})

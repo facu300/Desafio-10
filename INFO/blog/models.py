@@ -75,7 +75,7 @@ class Articulo(models.Model):
         on_delete=models.CASCADE, null=False
     )
     # autor = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
-    # etiqueta = models.ManyToManyField(Etiqueta, null=True)
+    etiqueta = models.ManyToManyField(Etiqueta)
     creacion = models.DateTimeField(auto_now_add=True)
     actualizacion = models.DateTimeField(auto_now=True)
 

@@ -15,10 +15,20 @@ class ArticuloForm(forms.ModelForm):
                 raise ValidationError("La imagen no puede ser mayor de 1020x768 píxeles.")
 
         return imagen
+    
+    # def __init__(self, *args, **kwargs):
+    #     super(ArticuloForm, self).__init__(*args, **kwargs)
+    #     instance = kwargs.get('instance')
+    #     if instance and instance.imagen:
+    #         self.fields['imagen'].widget = forms.ClearableFileInput()
 
     class Meta:
         model = Articulo
-        fields = ['titulo', 'bajada', 'contenido', 'categoria', 'imagen']
+        fields = ['titulo', 'bajada', 'contenido', 'categoria', 'imagen', 'etiqueta']
+        widgets = {
+            # 'imagen': forms.ClearableFileInput(),
+            'etiqueta': forms.CheckboxSelectMultiple(),
+        }
 
 class CategoriaForm(forms.ModelForm):
     class Meta:
