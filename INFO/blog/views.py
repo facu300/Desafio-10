@@ -12,6 +12,7 @@ from .models import Articulo, Comentario, Usuarios, Categoria, Etiqueta, Categor
 from django.contrib.auth.decorators import user_passes_test
 # from django.contrib.auth.models import User
 from .forms import PermisosUsuarioForm
+from django.core.paginator import Paginator
 
 def index_view(request):
     context = {
@@ -34,12 +35,17 @@ def blog(request):
         # Obtengo todas las etiquetas
         etiquetas = Etiqueta.objects.all()
 
+        # renderizo 4 post por página
+        paginator = Paginator(posts, 4)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         context = {
             'posts': posts,
             'categorias': categorias,
             'ultimos_post': ultimos_post,
-            'etiquetas': etiquetas
+            'etiquetas': etiquetas,
+            'page_obj': page_obj,
         }
         return render(request, "blog/blog.html", context)
     
@@ -53,14 +59,19 @@ def blog(request):
 
         etiquetas = Etiqueta.objects.all()
 
+        # renderizo 4 post por página
+        paginator = Paginator(posts, 4)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         context = {
             'posts': posts,
             'categorias': categorias,
             'ultimos_post': ultimos_post,
-            'etiquetas': etiquetas
+            'etiquetas': etiquetas,
+            'page_obj': page_obj,
         }
         return render(request, "blog/blog.html", context)
-
 
     else:
         print('paso de largo')
@@ -73,12 +84,17 @@ def blog(request):
         ultimos_post = Articulo.objects.filter(publicado=True).order_by('-creacion')[:6]
         # Obtengo todas las etiquetas
         etiquetas = Etiqueta.objects.all()
+        # renderizo 4 post por página
+        paginator = Paginator(posts, 4)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         context = {
             'posts': posts,
             'categorias': categorias,
             'ultimos_post': ultimos_post,
-            'etiquetas': etiquetas
+            'etiquetas': etiquetas,
+            'page_obj': page_obj,
         }
         return render(request, "blog/blog.html", context)
 
