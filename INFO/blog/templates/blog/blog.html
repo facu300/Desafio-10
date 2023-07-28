@@ -13,7 +13,7 @@
             <div class="col-lg-8">
                 
                 <div class="row g-5">
-                    
+                    {% if page_obj %}
                     {% for post in page_obj %}
                     <div class="col-md-6 wow slideInUp" data-wow-delay="0.1s">
                         <div class="blog-item bg-light rounded overflow-hidden">
@@ -37,7 +37,7 @@
                                 <a class="text-uppercase" href="{% url 'blog:post' post.id %}">Leer más <i class="bi bi-arrow-right"></i></a>
                                 
                                 </div>
-                
+                               
                                 {% if request.user == post.autor or request.user.is_superuser %}
                     <div class="btn-group" role="group">
                     <a href="{% url 'blog:editar_post' post.id %}" class="btn btn-sm btn-primary">Editar Post</a>
@@ -47,6 +47,9 @@
         </div>
     </div>
     {% endfor %}
+    {% else %}
+        <p>No se encontraron resultados.</p>                       
+    {% endif %}
     
     
     <div class="col-12 wow slideInUp d-flex justify-content-center" data-wow-delay="0.1s">
@@ -86,10 +89,14 @@
                 <div class="col-lg-4">
                     <!-- Search Form Start -->
                     <div class="mb-5 wow slideInUp" data-wow-delay="0.1s">
+                        <form method="get" action="{% url 'blog:buscar_articulos' %}">
                         <div class="input-group">
-                            <input type="text" class="form-control p-3" placeholder="Keyword">
+                            
+                            <input type="text" name="q" class="form-control p-3" placeholder="Buscar publicación">
                             <button class="btn btn-primary px-4"><i class="bi bi-search"></i></button>
+                            
                         </div>
+                        </form>
                         
                     </div>
                     <!-- Search Form End -->

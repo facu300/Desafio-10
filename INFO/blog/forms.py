@@ -1,5 +1,5 @@
 from django import forms
-from .models import Articulo, Categoria, Etiqueta, Usuarios, Comentario, Categoria_Articulo
+from .models import Articulo, Categoria, Etiqueta, Usuarios, Comentario, Categoria_Articulo, MensajeContacto
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError 
 from PIL import Image
@@ -105,3 +105,19 @@ class CategoriaCrearEditarForm(forms.ModelForm):
             'activo': forms.CheckboxInput(),
             'descripcion': forms.Textarea(attrs={'rows': 3, 'cols':25}),
         }
+
+
+###################### formulario contacto
+
+
+class FormContacto(forms.ModelForm):
+    class Meta:
+        model = MensajeContacto
+        fields = ['nombre', 'email', 'mensaje']
+
+        widgets = {
+                'nombre': forms.TextInput(attrs={'class': 'form-control bg-light border-0', 'placeholder': 'Nombre', 'style': 'height: 55px;'}),
+                'email': forms.EmailInput(attrs={'class': 'form-control bg-light border-0', 'placeholder': 'Email', 'style': 'height: 55px;'}),
+                'mensaje': forms.Textarea(attrs={'class': 'form-control bg-light border-0', 'rows': 3, 'placeholder': 'Mensaje'}),
+            }
+

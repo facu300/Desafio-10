@@ -3,8 +3,16 @@
     <div class="container">
         <div class="row gx-5 justify-content-center">
             <div class="col-lg-8 col-md-6">
-                <div class="row gx-5">
-                    <div class="col-lg-4 col-md-12 pt-5 mb-5">
+                <div class="row gx-5 d-flex flex-column align-items-center justify-content-center text-center">
+
+                    <div class="service-icon fa-5x">
+                        <i class="fab fa-github text-white "></i>
+                    </div>
+                    <div>
+                        <a href="https://github.com/facu300/Desafio-10/tree/development" class="link-primary">Repositorio del proyecto</a>
+                    </div>
+                    <br>
+                    {% comment %} <div class="col-lg-4 col-md-12 pt-5 mb-5">
                         <div class="section-title section-title-sm position-relative pb-3 mb-4">
                             <h3 class="text-light mb-0">Get In Touch</h3>
                         </div>
@@ -52,7 +60,7 @@
                             <a class="text-light mb-2" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Latest Blog</a>
                             <a class="text-light" href="#"><i class="bi bi-arrow-right text-primary me-2"></i>Contact Us</a>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                 </div>
             </div>
         </div>
@@ -63,7 +71,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-6">
                 <div class="d-flex align-items-center justify-content-center" style="height: 75px;">
-                    <p class="mb-0">&copy; <a class="text-white border-bottom" href="#">TecnoPower</a>. All Rights Reserved. 
+                    <p class="mb-0">&copy; <a class="text-white border-bottom" href="{% url 'blog:index' %}">TecnoPower</a>. All Rights Reserved. 
                     
                     <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
                     Designed by <a class="text-white border-bottom" href="https://htmlcodex.com">HTML Codex</a></p>

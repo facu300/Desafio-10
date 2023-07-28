@@ -97,3 +97,12 @@ class Categoria_Articulo(models.Model):
     id_articulo = models.ForeignKey(Articulo, on_delete=models.CASCADE)
     id_categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
 
+
+########### Formulario contacto
+
+class MensajeContacto(models.Model):
+    nombre = models.CharField(max_length=15)
+    email = models.EmailField()
+    mensaje = models.TextField()
+    fecha_hora = models.DateTimeField(auto_now_add=True)
+

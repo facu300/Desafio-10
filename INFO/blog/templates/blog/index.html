@@ -14,7 +14,7 @@
                         </div>
                         <div class="ps-4">
                             <h5 class="text-white mb-0">Líneas de código</h5>
-                            <h1 class="text-white mb-0" data-toggle="counter-up">12345</h1>
+                            <h1 class="text-white mb-0" data-toggle="counter-up">10000</h1>
                         </div>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
                         </div>
                         <div class="ps-4">
                             <h5 class="text-primary mb-0">Bug encontrados</h5>
-                            <h1 class="mb-0" data-toggle="counter-up">12345</h1>
+                            <h1 class="mb-0" data-toggle="counter-up">5000</h1>
                         </div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="ps-4">
                             <h5 class="text-white mb-0">Bug corregidos</h5>
-                            <h1 class="text-white mb-0" data-toggle="counter-up">12345</h1>
+                            <h1 class="text-white mb-0" data-toggle="counter-up">2500</h1>
                         </div>
                     </div>
                 </div>
@@ -139,31 +139,47 @@
                         </div>
                     </div>
                     <div class="pt-4 pb-5 px-5">
+                        <br>
+                        <br>
                         "Mis alumnos vienen cada vez más grosos.. o yo enseño cada vez mejor"
+                        <br>
+                        <br>
+                        <br>
+                        <br>
                     </div>
                 </div>
                 <div class="testimonial-item bg-light my-4">
                     <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
-                        <img class="img-fluid rounded" src="img/testimonial-2.jpg" style="width: 60px; height: 60px;" >
+                        <img class="img-fluid rounded" src="img/testimonial-2.jpg" style="width: 115px; height: 100px;" >
                         <div class="ps-4">
                             <h4 class="text-primary mb-1">Pablo</h4>
                             <small class="text-uppercase">Profe</small>
                         </div>
                     </div>
                     <div class="pt-4 pb-5 px-5">
-                        Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam
+                        <br>
+                        <br>
+                        <br>
+                        "Sin palabras"(no responde todavía)
+                        <br>
+                        <br>
+                        <br>
+                        <br>
                     </div>
                 </div>
                 <div class="testimonial-item bg-light my-4">
                     <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
-                        <img class="img-fluid rounded" src="img/testimonial-3.jpg" style="width: 60px; height: 60px;" >
+                        <img class="img-fluid rounded" src="{% static 'blog/img/profe_adrian.png' %}" style="width: 88px; height: 100px;" >
                         <div class="ps-4">
                             <h4 class="text-primary mb-1">Adrián</h4>
                             <small class="text-uppercase">Profe</small>
                         </div>
                     </div>
                     <div class="pt-4 pb-5 px-5">
-                        Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam
+                        "Desde el "Hola Mundo" al presente nos teletrasportamos,
+                        Cada error que corregimos , muchos retos encaramos.
+                        De HTML y CSS, a las bases de datos llegamos,
+                        Ya tenemos listos los  CV. ¿Quien nos da una mano ?"
                     </div>
                 </div>
                 {% comment %} <div class="testimonial-item bg-light my-4">
@@ -397,28 +413,22 @@
                 </div>
                 <div class="col-lg-5">
                     <div class="bg-primary rounded h-100 d-flex align-items-center p-5 wow zoomIn" data-wow-delay="0.9s">
-                        <form>
+                        <form method="post">
+                            {% csrf_token %}
                             <div class="row g-3">
                                 <div class="col-xl-12">
-                                    <input type="text" class="form-control bg-light border-0" placeholder="Nombre" style="height: 55px;">
+                                    {{ form.nombre }}
                                 </div>
                                 <div class="col-12">
-                                    <input type="email" class="form-control bg-light border-0" placeholder="Email" style="height: 55px;">
+                                    {{ form.email }}
                                 </div>
-                                {% comment %} <div class="col-12">
-                                    <select class="form-select bg-light border-0" style="height: 55px;">
-                                        <option selected>Selecccione el motivo de su consulta</option>
-                                        <option value="1">Service 1</option>
-                                        <option value="2">Service 2</option>
-                                        <option value="3">Service 3</option>
-                                    </select>
-                                </div> {% endcomment %}
                                 <div class="col-12"> 
-                                    <textarea class="form-control bg-light border-0" rows="3" placeholder="Mensaje"></textarea>
+                                    {{ form.mensaje }}
                                 </div>
                                 <div class="col-12">
                                     <button class="btn btn-dark w-100 py-3" type="submit">Enviar mensaje</button>
                                 </div>
+                                {{ form.errors }}
                             </div>
                         </form>
                     </div>

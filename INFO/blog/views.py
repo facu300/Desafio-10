@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from . import models
 from django.urls import reverse
 from django.views import generic
-from .forms import UsuariosForm, LoginForm, ArticuloForm, ComentarioForm, ModificarUsuarioForm, CategoriaCrearEditarForm, EtiquetaForm
+from .forms import UsuariosForm, LoginForm, ArticuloForm, ComentarioForm, ModificarUsuarioForm, CategoriaCrearEditarForm, EtiquetaForm, FormContacto
 from django.contrib.auth import login, logout, authenticate
 from .models import Articulo, Comentario, Usuarios, Categoria, Etiqueta, Categoria_Articulo
 # from django.contrib.auth.forms import UserCreationForm
@@ -13,10 +13,21 @@ from django.contrib.auth.decorators import user_passes_test
 # from django.contrib.auth.models import User
 from .forms import PermisosUsuarioForm
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 def index_view(request):
+    
+    if request.method == 'POST':
+        form = FormContacto(request.POST)
+        if form.is_valid():
+            form.save()  # Guarda el mensaje en la base de datos si el formulario es válido
+            # Aquí puedes agregar lógica adicional si es necesario, como enviar un correo electrónico, etc.
+    else:
+        form = FormContacto()
+    
     context = {
-        'is_index': True            # La variabla is_index es para un if en el html que cambia el header 
+        'is_index': True,          # La variable is_index es para un if en el html que cambia el header 
+        'form': form
     }
     return render(request, 'index.html', context)
 
@@ -74,7 +85,6 @@ def blog(request):
         return render(request, "blog/blog.html", context)
 
     else:
-        print('paso de largo')
 
         # Obtengo todos los posts
         posts = Articulo.objects.all()
@@ -367,3 +377,45 @@ def crear_editar_etiqueta(request):
         form = EtiquetaForm(instance=etiqueta)
 
     return render(request, 'manage_tags.html', {'form': form, 'etiquetas_existentes': etiquetas_existentes, 'etiqueta': etiqueta})
+
+
+def buscar_articulo(request):
+    if 'q' in request.GET:
+        query = request.GET.get('q')
+        palabras = query.split()
+        print(f"palabras: {palabras}")
+        consulta = Q()
+
+        for palabra in palabras:
+            consulta |= Q(contenido__icontains=palabra) | Q(etiqueta__nombre__icontains=palabra)
+        print(consulta)    
+
+        posts = Articulo.objects.filter(consulta).distinct()
+
+        for articulo in posts:
+            print(articulo.titulo)
+
+        categorias = Categoria.objects.all()
+        # Obtengo los últimos 6 artículos ordenados por fecha de creación
+        ultimos_post = Articulo.objects.filter(publicado=True).order_by('-creacion')[:6]
+
+        # Obtengo todas las etiquetas
+        etiquetas = Etiqueta.objects.all()
+
+        paginator = Paginator(posts, 4)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+    
+        print(page_number)
+        context = {
+                # 'posts': posts,
+                'categorias': categorias,
+                'ultimos_post': ultimos_post,
+                'etiquetas': etiquetas,
+                'page_obj': page_obj,
+            }
+
+        return render(request, 'blog/blog.html', context)
+    else:
+
+        return redirect("blog:blog") 
