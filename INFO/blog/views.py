@@ -146,6 +146,9 @@ def post(request, post_id):
 
 
 def register_view(request):
+
+    if not request.user.is_anonymous:   # Si el usuario ya está logueado vuelve al index sin entrar a la vista
+        return redirect('blog:index')
     
     if request.method == 'POST':
         form = UsuariosForm(request.POST)     # Procesa el formulario si se envió una solicitud POST
@@ -239,30 +242,40 @@ def edit_users_permissions(request):
 
 # ------------------------------------ Edición de posts
 
+
 def editar_post(request, post_id):
     post = get_object_or_404(Articulo, pk=post_id)
 
-    if request.method == 'POST':
-        form = ArticuloForm(request.POST, request.FILES, instance=post)
-        if form.is_valid():
-            form.save()
-            return redirect('blog:post', post_id=post.id)
-    else:
-        form = ArticuloForm(instance=post)
+    if post.autor_id == request.user.id or is_admin(request.user):          # linea para asegurarse que solo el autor o admin puede editar
 
-    return render(request, 'editar_post.html', {'form': form})
+        if request.method == 'POST':
+            form = ArticuloForm(request.POST, request.FILES, instance=post)
+            if form.is_valid():
+                form.save()
+                return redirect('blog:post', post_id=post.id)
+        else:
+            form = ArticuloForm(instance=post)
+
+        return render(request, 'editar_post.html', {'form': form})
+    else:
+        return redirect('blog:blog')
 
 
 
 def eliminar_post(request, post_id, confirmacion=False):
     post = get_object_or_404(Articulo, pk=post_id)
 
-    if request.method == 'POST':
-    # if confirmacion:
-        post.delete()
-        return redirect('blog:blog')
 
-    return render(request, 'eliminar_post.html', {'post': post})
+    if post.autor_id == request.user.id or is_admin(request.user):           # linea para asegurarse que solo el autor o admin puede editar
+
+        if request.method == 'POST':
+        # if confirmacion:
+            post.delete()
+            return redirect('blog:blog')
+
+        return render(request, 'eliminar_post.html', {'post': post})
+    else:
+        return redirect('blog:blog')
 
 
 def modify_user(request):
@@ -282,7 +295,7 @@ def modify_user(request):
 #################################### Bloque creación edición de categorías ##########
 
 
-
+@user_passes_test(is_admin, login_url='/')
 def crear_editar_categorias(request):
     categorias = Categoria.objects.all()
     categoria_seleccionada = None
@@ -315,7 +328,6 @@ def crear_editar_categorias(request):
 
 
 
-
 from django.http import JsonResponse
 def categoria_json(request, categoria_id):
     categoria = get_object_or_404(Categoria, pk=categoria_id)
@@ -329,25 +341,11 @@ def categoria_json(request, categoria_id):
 
 #################### Bloque edición etiqueta ###################
 
-# def crear_editar_etiqueta(request, id_etiqueta=None):
-#     etiqueta = get_object_or_404(Etiqueta, pk=id_etiqueta) if id_etiqueta else None
 
-#     if request.method == 'POST':
-#         if 'eliminar' in request.POST and etiqueta:
-#             etiqueta.delete()
-#             return redirect('blog:crear_editar_etiqueta')  # Reemplaza esto con la URL de la lista de etiquetas
-
-#         form = EtiquetaForm(request.POST, instance=etiqueta)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('blog:crear_editar_etiqueta')  # Reemplaza esto con la URL de la lista de etiquetas
-
-#     else:
-#         form = EtiquetaForm(instance=etiqueta)
-
-#     return render(request, 'manage_tags.html', {'form': form, 'etiqueta': etiqueta})
 from django.contrib import messages
 
+
+@user_passes_test(is_admin, login_url='/')
 def crear_editar_etiqueta(request):
     etiqueta_id = request.GET.get('id_etiqueta', None)
     etiqueta = get_object_or_404(Etiqueta, pk=etiqueta_id) if etiqueta_id else None
